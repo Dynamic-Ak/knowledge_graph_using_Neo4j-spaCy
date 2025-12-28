@@ -21,7 +21,7 @@ Important entities are extracted from the paper and stored in **Neo4j**, where r
 
 ```
 ready_project/
-├── fp.pdf
+├── research_paper.pdf
 ├── data.txt
 ├── extract_entities.py
 ├── neo4j_upload.py
