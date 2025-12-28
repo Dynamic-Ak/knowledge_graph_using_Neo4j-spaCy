@@ -1,0 +1,285 @@
+Detecting Emotion Drift in Mental Health Text Using Pre-Trained
+Transformers
+Author
+Shibani Sankpal
+Abstract
+This study investigates emotion drift: the change in emotional state across a single text, within mental
+health-related messages. While sentiment analysis typically classifies an entire message as positive, negative,
+or neutral, the nuanced shift of emotions over the course of a message is often overlooked. This study
+detects sentence-level emotions and measures emotion drift scores using pre-trained transformer models such
+as DistilBERT and RoBERTa. The results provide insights into patterns of emotional escalation or relief in
+mental health conversations. This methodology can be applied to better understand emotional dynamics in
+content.
+1. Introduction
+Understanding human emotions in written communication has become increasingly important, especially in
+the context of mental health. More traditional methods to understand sentiment classify whole texts for
+being positive, negative, or neutral and provide a high level overview of the emotional tone (Dilmegani,
+2024). However, these algorithms do not consider the change or drift in emotional state within a single
+text. These types of large emotion shifts, or drifts in emotions can be indicative of emotion escalation or
+instability, which is particularly relevant in mental health(Mitchell, 2021).
+Recent improvements in natural language processing such as pre-trained transformer models (e.g., Dis-
+tilBERT and RoBERTa) make it possible to analyze emotions which are more subtle on the sentence
+level(Acheampong et al., 2020). By using these models, the ability to examine subtle emotional transi-
+tions and measure changes of emotions in texts is made possible. Comprehending these dynamics can
+increase early detection of emotional distress, improve automated mental health care systems, and offer
+deeper insights into users’ emotional experiences.
+In this study, I propose a framework for detecting emotion drift in mental health texts. I have analyzed
+sentence-level emotions using transformer models, compute emotion drift scores, and evaluate their ability
+to capture emotional variability. Our results demonstrate how emotional analysis can uncover patterns
+of emotional escalation that are not captured by traditional sentiment analysis.A lightweight Streamlit
+application was also developed to demonstrate the practical use of emotion drift analysis, allowing users
+to input any text and instantly view sentence-level emotions, the emotion timeline, drift score, and overall
+sentiment in an intuitive and interactive interface.
+2. Literature Review
+Emotion analysis in text has become a relevant area of research from natural language processing (NLP),
+particularly within areas related to human welfare, online communication and mental health(Plaza-del Arco
+et al., 2024). Most of the existing sentiment analysis models are built in such a way that they assign one
+globalsentiment(positive, negativeorneutral)toanentiremessage. Thishasworkedwellinvariousscenarios
+such as product review, social media polarity classification but does not model the fine-grained emotional
+dynamics commonly observed in user-generated content(Pang & Lee, 2008). Psychological evidence suggestsarXiv:2512.13363v1  [cs.CL]  15 Dec 2025that people often experience ambivalent or contradictory feelings when listening to a single story, especially
+when participants are discussing something negative about their life or psychological problems (Liu, 2024).
+The recent advancements in the field, such as transformers and deep learning architectures, have allowed
+for classification of these fine-grained emotions.
+The utilization of pre-trained models such as BERT (Devlin et al.,n.d.), RoBERTa and their distilled
+versions can improve the recognition performance of different emotion types, including joy, anger, sadness,
+fear and surprise. The availability of such rich annotations has also expanded the information available
+for emotion classification research, by modularization problems that benefit from richer annotations like
+those found in GoEmotions(GoEmotions: A Dataset for Fine-Grained Emotion Classification, n.d.) with
+27 emotion labels. Other data sets such as the Emotion dataset used in this work include a selected few
+core emotions, allowing for simpler benchmarking while maintaining emotional variety.However, most of
+these models and datasets still evaluate emotions at the document level, leaving sentence-level emotional
+transitions largely unexplored.
+The concept of emotion drift, defined as the change in emotional state across different segments of a
+single piece of text, has only recently started receiving attention. A few studies have explored emotional
+trajectories in narratives and long-form posts, showing that measuring emotional progression can uncover
+latent psychological indicators and provide deeper insights into user behaviour(Christ et al., 2024). In
+mental health contexts, emotional fluctuations have been linked to stress, anxiety, mood instability, and
+coping mechanisms, making them valuable for early detection and support frameworks. Despite this, there
+is limited work on operationalising emotion drift using pre-trained transformer models, particularly in real-
+time, user-facing applications.
+To address this gap, recent research efforts have focused on applying transformer-based emotion classifiers
+at the sentence level to compute emotional trajectories and drift scores. Models such as DistilBERT and
+DistilRoBERTa provide a computationally efficient alternative to their full-sized versions while retaining
+high accuracy, making them suitable for practical applications like conversational agents and mental health
+monitoring tools(Sajid, 2018). The increasing emphasis on explainability and transparency in AI systems
+has further highlighted the importance of visualising emotional sequences, not merely reporting a single
+sentiment label. This study builds upon this emerging line of research by applying distilled transformer
+models to detect sentence-level emotions, quantify emotional volatility, and visualise emotion drift in a
+user-friendly interface.
+3. Methodology
+This study follows a multi-stage methodology designed to detect sentence-level emotions, measure emotional
+drift within a text, and evaluate the performance of multiple pre-trained transformer models. The method-
+ology consists of four major components: dataset preparation, model selection, emotion drift computation
+and application integration.
+Dataset Preparation
+The performance of different transformer-based emotion classification models were benchmarked using
+the publicly available Emotion Dataset provided by Hugging Face Datasets library. This collection comprises
+20,000 text samples with one of six basic emotions: joy, anger, sadness, fear, love and surprise (Datasets
+at Hugging Face, 2023). I choose the dataset because of its balanced quantity, clear label structure, and
+popularity in emotion recognition.
+The dataset was split into training, validation, and test sets as provided. For evaluation purposes, only
+the test set (2,000 samples) was used, ensuring that performance metrics reflect the models’generalisation
+to unseen data. All text samples were preprocessed by lowercasing and removing extraneous whitespace,
+while preserving semantic content to maintain the integrity of emotion cues.Model Selection
+Three widely used transformer models were selected to evaluate their effectiveness in sentence-level emo-
+tion classification:
+•DistilRoBERTa
+•DistilBERT
+•DeBERTa
+The models selected for evaluation were chosen based on their demonstrated effectiveness in emotion clas-
+sification and their suitability for sentence-level analysis. DistilRoBERTa was included for its balance of
+accuracy and efficiency, making it well-suited for interactive applications. DistilBERT was selected for its
+consistent and interpretable predictions, which are particularly valuable for real-time emotion drift anal-
+ysis. DeBERTa Base represents a more recent architecture with advanced attention mechanisms capable
+of capturing subtle emotional nuances, included to assess whether it could improve accuracy over the dis-
+tilled models. Together, these models provide a comprehensive comparison across efficiency, consistency, and
+state-of-the-art performance, enabling an informed selection for the application.
+The Hugging Face text-classification pipeline was used to perform emotion prediction, enabling consistent
+inference across all models.
+Each model was evaluated using the same test set and identical processing pipeline to ensure fairness.
+For every sample in the test set, the predicted emotion label was compared with the ground truth label.
+Accuracy was used as the comparison metric due to its interpretability and relevance for choosing a model
+for deployment.
+The evaluation results showed that DistilBERT achieved the highest accuracy (92.7%), outperforming
+DistilRoBERTa (83.9%) and GoEmotions RoBERTa (19.6%). Based on this high accuracy and excellent
+computationalefficiency, DistilBERTwaschosenasthefoundationalmodelforthefinalemotiondriftanalysis
+application.
+Emotion Drift Computation
+After selecting the best-performing model, a custom emotion drift pipeline was developed:
+1. Sentence Segmentation
+User input text is split into individual sentences using regex-based segmentation.
+2. Emotion Classification
+Each sentence is passed through the DistilBERT classifier to obtain the predicted emotion label.
+3. Emotion Timeline Construction
+The sequence of predicted emotions is arranged chronologically to form an emotion timeline, allowing
+users to visually track emotional transitions.
+Figure 1: Emotion timeline of sample text
+4. Drift Score Calculation
+Emotion drift is computed as the number of emotion changes divided by the total number of tran-
+sitions.A score of 0 indicates no change in emotional state, while a score close to 1 represents high
+emotional volatility.
+Drift Score =Numberof EmotionChanges
+Numberof Sentences−1
+5. Overall Sentiment Estimation
+The final sentiment of the passage is obtained using the DistilBERT model fine-tuned for sentiment
+analysis(Hugging Face, 2024) to understand general tone.
+Figure 2: Emotion Drift Score and Overall Sentiment of text
+Application Integration
+The above pipeline was integrated into a Streamlit web application. Users can input any text, view the
+predicted emotion timeline, observe the drift score, and receive the overall sentiment. This makes emotion
+drift analysis accessible and interpretable to users.4. Model Evaluation
+I evaluated three pre-trained transformer models for sentence-level emotion detection.To assess the
+suitability of transformer-based architectures for emotion classification, I benchmarked three pre-trained
+models sourced from the Hugging Face Model Hub. This phase focused on understanding how different
+encoder variants perform when applied to sentence-level emotion detection tasks.
+Figure 3: overview of models selected
+Each model was loaded using the Hugging Face transformers pipeline for text classification, predicting
+multiple emotions per sentence. The predicted labels were then converted to a simplified representation for
+drift analysis.Distil RoBERTa
+This is a distilled version of RoBERTa, which means it is a smaller, faster version of the original RoBERTa
+model that has been optimized to maintain the majority of its performance.Compared to RoBERTa-base,
+which has 125M parameters, the model contains 82M parameters with 6 layers, 768 dimensions, and 12
+heads(Hugging Face, 2023).RoBERTa itself is based on the transformer architecture, using self-attention to
+create contextualized embeddings for each token in a sentence(Gandhi, 2025).
+Figure 4: Workflow for Distil RoBERTa model
+The distilled form retains a high level of general-purpose understanding of language, but it may be less
+sensitive to subtle emotional cues due to its diminished depth and representational ability. Because of this,
+it excels at main or high-frequency emotions (such as joy, sadness, and anger), but it may have trouble
+with more complex or ambiguous emotions like anticipation or confusion.However, this model is a great
+choice for real-time emotion detection pipelines.Distil BERT
+This model(distilbert-base-uncased-emotion) is a DistilBERT variant, a lighter version of BERT that
+reduces parameters and speeds up inference. The “uncased” version ignores capitalization, making it robust
+to case variations. It is fine-tuned for emotion detection, providing reliable sentence-level
+predictions(GeeksforGeeks, 2025).
+Figure 5: Workflow for Distil BERT model
+DistilBERT maintains the fundamental advantages of the BERT architecture, such as robust semantic
+representation and bidirectional contextual awareness, despite being lightweight(GeeksforGeeks, 2025).
+This allows it to detect subtle emotional cues in short text segments, making its predictions both stable and
+reliable across consecutive sentences. In the context of emotion drift analysis, this stability ensures that the
+model captures genuine emotional transitions rather than producing noisy or inconsistent classifications.DeBERTa
+This model uses the DeBERTa-v3 Base architecture, which improves on BERT or RoBERTa by employing
+disentangled attention and using enhanced mask decoders (Hugging Face, n.d.). This allows it to capture
+subtle nuances in text and produce richer contextual embeddings. The model is fine-tuned for emotion
+classification, making it suitable for primary emotion detection.
+Figure 5: Workflow for DeBERTa Base model
+While DeBERTa often achieves slightly higher accuracy than distilled models, its predictions can
+occasionally be inconsistent for ambiguous sentences due to differences in fine-tuning datasets and label
+distribution.5. Experiments & Results
+To evaluate the performance of different pre-trained transformer models for sentence-level emotion
+detection, I choose a series of text samples and compared their predictions between the three models on
+sentence-level emotion detection. The following figure shows the predicted emotions for each sentence
+across the models:
+Figure 6: predicted emotions for sample sentences across models
+The performance of each model was subsequently validated on a bigger benchmark dataset, and the
+following results were obtained:
+Figure 7: Accuracy scores of models
+•roberta_distil: 0.8390
+•bert_distil: 0.9270
+•deberta_base: 0.9315
+From the evaluation results, deberta_base achieved the highest overall accuracy (0.9315), slightly
+outperforming bert_distil (0.9270), while roberta_distil scored 0.8390. Despite a strong accuracy,
+DeBERTa does indeed misclassify test sentences sometimes in ways that appear strange or
+counter-intuitive. For example, categorizing “This is annoying and disappointing” as anger (rather than
+sadness) or “I don’t know what to feel anymore” as joy.These inconsistencies are likely due to differences in
+fine-tuning datasets, label schemes, and sensitivity to subtle emotional cues.
+In contrast, bert_distil produces slightly lower overall accuracy but demonstrates more consistent and
+intuitive sentence-level predictions, which is particularly important for real-time emotion drift analysis in
+interactive applications. That is why I chose Distil BERT for the Streamlit application as its predictions
+are more trustworthy to calculate sentence-level emotional differences.Example of Model Predictions and Drift Score
+In this experiment, I analyzed a short text passage to demonstrate emotion drift detection using three
+pre-trained transformer models: roberta_distil, bert_distil, and deberta_base.
+This was the example text used: “I feel overwhelmed today. I tried to reach out for help. Nobody is
+responding, and I am frustrated.”
+The input text was first split into individual sentences, and each sentence was analyzed to predict its
+dominant emotion. The emotion drift score was then computed by calculating the proportion of
+consecutive sentences that exhibited a change in emotion. For the example passage, the roberta_distil
+model predicted the emotions [’surprise’, ’sadness’, ’anger’] with a drift score of 1.0, indicating a complete
+change in emotion across sentences. The bert_distil model predicted [’fear’, ’fear’, ’anger’] with a drift
+score of 0.5, showing that the first two sentences maintained the same emotion before changing. The
+deberta_base model predicted [’fear’, ’joy’, ’anger’] with a drift score of 1.0, again indicating high
+emotional volatility. This comparison demonstrates how different models capture emotional transitions,
+highlighting both the strengths and limitations of each model in detecting nuanced emotional changes. The
+drift score effectively quantifies the sequence of emotional changes.
+Figure 8: emotional drift detection across models for a sample text
+The figure below illustrates the emotion drift across three sentences from an example post, as detected by
+three different pre-trained models: RoBERTa Distil, BERT Distil, and DeBERTa Base. Each model’s
+detected emotion for every sentence is mapped on the y-axis, while the x-axis represents the sentence
+sequence (S1–S3). The lines show how emotions change throughout the text, providing a clear visual
+representation of emotional transitions. For instance, RoBERTa Distil identifies a progression from surprise
+→sadness→anger, indicating a high emotional drift. BERT Distil shows fear→fear→anger, reflecting
+a more gradual escalation. DeBERTA Base detects fear→joy→anger. This visualization highlights how
+different models interpret emotional changes in text.Figure 9: graph of emotion drift across sentences
+6. App Development
+A Streamlit application was developed to provide an interactive environment for analyzing emotion drift
+within user-submitted text. The app can be accessed here:https://emotion-drift-app.streamlit.app/.
+The system takes a text passage as input, and it divides the text into sentences automatically and uses
+pre-trained emotion classifier DistilBERT to obtain sentence-level emotions. Based on performance
+evaluation, DistilBERT was considered as the main model for deployment which reported a good accuracy
+(92.7%) and presented reliable and efficient response time for real-time analysis.
+The application evaluates how emotions change throughout a piece of text. The input text is broken into
+smaller segments, and each segment is classified to generate an Emotion Timeline, showing the sequence of
+feelings expressed by the writer.
+Figure 10: Emotion Timeline generated in web application
+The degree of emotional fluctuation is then measured using a Drift Score, where higher scores suggest more
+emotional volatility.
+Figure 11: Drift score generated in web application
+Alongside this, the app also provides an overall sentiment (positive, negative, or neutral) to summarise the
+dominant tone of the entire passage. This allows users to visualise both the emotional flow and the general
+mood of the text in a clear and intuitive way.Figure 12: screenshot of web application7. Conclusion & Future Work
+The study shows that DeBERTa Base and DistilBERT achieve high accuracy in primary emotion
+detection, with DeBERTa slightly outperforming DistilBERT in terms of accuracy.However, DistilBERT
+offers more consistent and easily interpretable sentence-level predictions and is a good candidate for
+real-time usage. Our models both illustrate how emotion drift scores can capture variation in emotion
+within a text, while providing more detailed analysis than traditional sentiment analysis.This approach is
+applicable to mental health texts, online forums, or social media, providing a quantitative way to assess
+emotional dynamics across sequences of sentences.
+However the limitation is that the models are trained on general-purpose datasets and may not fully
+capture domain-specific emotional expressions in mental health posts.
+In conclusion, this paper discusses how to apply transformer models for sentence-level emotion detection to
+identify emotion drift in textual data. By computing drift scores, it is easier to quantify emotional
+variability and highlight patterns of escalation or relief within posts.
+Future work includes:
+•Fine-tuning transformer models on domain-specific datasets (e.g., mental health forums) to improve
+accuracy.
+•Extending emotion drift analysis to multi-modal data (text + audio/video).
+•Incorporating temporal analysis to study emotion evolution over multiple posts or interactions.8. References
+1. Acheampong, F. A., Nunoo-Mensah, H., & Chen, Wenyu. (2020, November 28). Comparative
+Analyses of BERT, RoBERTa, DistilBERT, and XLNet for Text-based Emotion Recognition.
+https://www.researchgate.net/publication/346443459_Comparative_Analyses_of_BERT_
+RoBERTa_DistilBERT_and_XLNet_for_Text-based_Emotion_Recognition
+2. ‌Dilmegani, C. (2024, April 4). Sentiment Analysis Methods Overview, Pros & Cons.
+Research.aimultiple.com. https://research.aimultiple.com/sentiment-analysis-methods/
+3. ‌Mitchell, J. (2021). Affective shifts: mood, emotion and well-being. Synthese, 199, 11793–11820.
+https://doi.org/10.1007/s11229-021-03312-3
+4. ‌Plaza-del-Arco, F. M., Curry, A., Curry, A. C., & Hovy, D. (2024). Emotion Analysis in NLP:
+Trends, Gaps and Roadmap for Future Directions. ArXiv.org. https://arxiv.org/abs/2403.01222
+5. ‌Pang, B. and Lee, L. (2008) Opinion Mining and Sentiment Analysis. Foundations and Trends®in
+Information Retrieval, 2, 1-135. - References - Scientific Research Publishing. (n.d.). Www.scirp.org.
+https://www.scirp.org/reference/referencespapers?referenceid=2442500
+6. ‌Liu, M. (2024, June 13). Are mixed emotions real? New research says yes. News and Events.
+https://dornsife.usc.edu/news/stories/mixed-emotions-are-real/
+7. ‌GoEmotions: A Dataset for Fine-Grained Emotion Classification. (n.d.). Research.google.
+https://research.google/blog/goemotions-a-dataset-for-fine-grained-emotion-classification/
+8. ‌Christ, L., Amiriparian, S., Milling, M., Aslan, I., & Schuller, B. W. (2024). Modeling Emotional
+Trajectories in Written Stories Utilizing Transformers and Weakly-Supervised Learning. ArXiv.org.
+https://arxiv.org/abs/2406.02251
+9. ‌Sajid, H. (2018). Distilbert: A Smaller, Faster, and Distilled BERT - Zilliz blog. Zilliz.com.
+https://zilliz.com/learn/distilbert-distilled-version-of-bert
+10. ‌dair-ai/emotion·Datasets at Hugging Face. (2023, March 23). Huggingface.co.
+https://huggingface.co/datasets/dair-ai/emotion
+11. ‌j-hartmann/emotion-english-distilroberta-base·Hugging Face. (n.d.). Huggingface.co.
+https://huggingface.co/j-hartmann/emotion-english-distilroberta-base
+12. ‌bhadresh-savani/distilbert-base-uncased-emotion·Hugging Face. (n.d.). Huggingface.co.
+https://huggingface.co/bhadresh-savani/distilbert-base-uncased-emotion
+13. ihabiko/deberta-v3-base-emotion-model·Hugging Face. (2025). Huggingface.co.
+https://huggingface.co/ihabiko/deberta-v3-base-emotion-model
+14. ‌distilbert/distilbert-base-uncased-finetuned-sst-2-english·Hugging Face. (2024, January 30).
+Huggingface.co. https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english
+15. distilbert/distilroberta-base·Hugging Face. (2023, April 5). Huggingface.co.
+https://huggingface.co/distilbert/distilroberta-base
+16. ‌Gandhi, D. (2025, May 26). RoBERTa Model Explained: Features, Benefits & Use Cases.
+Dhiwise.com. https://www.dhiwise.com/post/roberta-model
+17. ‌GeeksforGeeks. (2025, June 26). Introduction to DistilBERT Model. GeeksforGeeks.
+https://www.geeksforgeeks.org/nlp/introduction-to-distilbert-model/
+18. ‌microsoft/deberta-v3-base·Hugging Face. (n.d.). Huggingface.co.
+https://huggingface.co/microsoft/deberta-v3-base

@@ -1,0 +1,33 @@
+- References - Scientific Research Publishing
+Zilliz.com
+Hugging Face Datasets
+Emotion Drift Computation
+Drift Score Calculation
+Emotion
+Emotion Timeline
+Future Directions
+XLNet
+Emotion Drift Score
+I., & Schuller
+Dhiwise.com
+The Hugging Face
+Hugging Face
+Experiments & Results
+Emotion Analysis
+content(Pang & Lee
+Drift Score
+application7
+Opinion Mining and Sentiment Analysis
+Conclusion & Future Work
+Sajid
+the Hugging Face Model Hub
+Drift
+GoEmotions
+bhadresh
+Emotion Recognition
+Dataset Preparation
+BERT
+Model Selection
+j-hartmann
+Nunoo-Mensah
+Smaller, Faster
