@@ -2,10 +2,7 @@
 
 
 ## Overview
-
-This project converts a research paper into a **knowledge graph** using NLP.
-Important entities are extracted from the paper and stored in **Neo4j**, where relationships between them can be visualized and queried.
-
+In this project, I built a system that converts an unstructured research paper into a structured Knowledge Graph. The research paper is first processed using Python and spaCy to automatically extract important entities such as models, datasets, and research concepts. Since raw NLP extraction can produce noisy results, rule-based filtering is applied to retain only meaningful academic entities. The cleaned entities are stored as nodes in a Neoj graph database. Semantic relationships such as USED_FOR, DATASET_FOR, BASED_ON, and PART_OF are created automatically using rule-based logic, transforming isolated entities into a connected knowledge graph that represents the structure of the research. Neoj is containerized using Docker to ensure easy deployment and environment consistency. The final graph can be queried and visually explored using Cypher queries, allowing clear understanding of how models, datasets, and concepts are connected within the research paper.
 ---
 
 ## Tech Stack
